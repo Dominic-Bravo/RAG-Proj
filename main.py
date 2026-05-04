@@ -26,6 +26,31 @@ text_splitter = RecursiveCharacterTextSplitter(
 )
 chunks = text_splitter.split_documents(docs)
 
+# sample chunking configuration with custom separators (uncomment if needed)
+# text_splitter = RecursiveCharacterTextSplitter(
+#     chunk_size=700,
+#     chunk_overlap=100,
+#     separators=[
+#         "\n\n",  # paragraphs
+#         "\n",    # lines
+#         ".",     # sentences
+#         " ",     # words
+#     ]
+# )
+
+# sample chunking configuration for markdown documents (uncomment if needed)
+# from langchain.text_splitter import MarkdownHeaderTextSplitter
+
+# headers_to_split_on = [
+#     ("#", "Header 1"),
+#     ("##", "Header 2"),
+#     ("###", "Header 3"),
+# ]
+
+# splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on)
+# chunks = splitter.split_text(markdown_text)
+
+
 # --- 3. VECTOR STORAGE ---
 # gemini-embedding-001 is the stable standard for 2026 RAG pipelines
 embeddings = GoogleGenerativeAIEmbeddings(
