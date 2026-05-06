@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     GOOGLE_API_KEY: str
@@ -6,12 +6,12 @@ class Settings(BaseSettings):
     LLM_MODEL: str = "gemini-2.5-flash"
     CHUNK_SIZE: int = 700
     CHUNK_OVERLAP: int = 100
-    # THIS WAS MISSING:
-    VECTOR_DB_DIR: str = "./chroma_db" 
+    VECTOR_DB_DIR: str = "./chroma_db"
 
-    class Config:
-        env_file = ".env"
-        # This tells pydantic to ignore extra fields in .env if any
-        extra = "ignore" 
+    # New V2 way to handle config
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore"
+    )
 
 settings = Settings()
