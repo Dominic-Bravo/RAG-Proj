@@ -5,6 +5,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain_chroma import Chroma 
 from langchain_core.prompts import ChatPromptTemplate
+
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
@@ -63,6 +64,7 @@ vectorstore = Chroma.from_documents(documents=chunks, embedding=embeddings)
 retriever = vectorstore.as_retriever()
 
 # --- 4. PROMPT ENGINEERING ---
+
 template = """Answer the question based strictly on the provided document context:
 {context}
 
@@ -70,6 +72,7 @@ Question: {question}
 
 If the answer is not in the context, clearly state that the information is not available.
 """
+
 prompt = ChatPromptTemplate.from_template(template)
 
 # --- 5. MODEL SETUP ---
