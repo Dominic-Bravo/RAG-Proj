@@ -1,57 +1,89 @@
-🧠 Document Intelligence RAG System
-A high-performance Retrieval-Augmented Generation (RAG) pipeline built to turn static PDF documents into actionable intelligence. This system leverages semantic search to provide accurate, grounded responses based strictly on provided technical documents, effectively eliminating LLM hallucinations.
+This is a professional README.md designed to showcase your project's architecture and technical stack—perfect for your portfolio.
 
-🚀 Technical Highlights
-Modern Python Tooling: Managed with uv for lightning-fast dependency resolution and reproducible environments.
+AI RAG-Python Assistant 🤖
+A modular, scalable Retrieval-Augmented Generation (RAG) system built with Python, LangChain, and Google Gemini. This project implements a professional "Service Layer" architecture, allowing for persistent vector storage and contextual conversation history.
 
-Advanced Orchestration: Built using LangChain Expression Language (LCEL) for a modular and transparent data pipeline.
+🚀 Features
+Persistent Vector Store: Uses ChromaDB to save document embeddings locally, avoiding redundant API calls.
 
-State-of-the-Art Models: Utilizes Gemini 2.5 Flash for reasoning and gemini-embedding-001 for high-dimensional vector search.
+Contextual Memory: Remembers previous interactions in a session using LangChain's chat_history.
 
-Vector Infrastructure: Implements ChromaDB as a vector store for efficient semantic retrieval.
+Modular Architecture: Clean separation between data ingestion, vector management, and the RAG engine.
 
-🛠 Tech Stack
-Core: Python 3.12+
+Type Safety & Config: Managed via Pydantic Settings for robust environment variable handling.
 
-Framework: LangChain
+Production Ready: Includes a full suite of pytest unit and integration tests.
 
-LLM & Embeddings: Google Gemini API
+🛠️ Tech Stack
+LLM: Google Gemini 2.5 Flash
 
-Vector Store: ChromaDB
+Embeddings: Google Gemini Embedding (001)
 
-Environment: uv & python-dotenv
+Orchestration: LangChain (LCEL)
 
-📋 System Architecture
-Ingestion: Parses local PDFs using PyPDFLoader.
+Vector Database: ChromaDB
 
-Transformation: Breaks text into 700-character chunks with 100-character overlap using RecursiveCharacterTextSplitter to preserve semantic context.
+Environment Management: uv (Fast Python package installer)
 
-Embedding: Converts text chunks into vectors using Google’s retrieval-optimized embedding models.
-
-Retrieval: Performs a similarity search to extract the most relevant context for any given query.
-
-Generation: Augments the LLM prompt with retrieved context to ensure responses are "grounded" in the source material.
-
+📁 Project Structure
+Plaintext
+rag_project/
+├── src/
+│   ├── core/
+│   │   ├── ingestion.py    # PDF loading and text splitting
+│   │   ├── vectorstore.py  # ChromaDB & Embedding initialization
+│   │   └── engine.py       # LCEL Chain and RAG logic
+│   ├── config.py           # Global settings via Pydantic
+│   └── main.py             # Entry point (Interactive CLI)
+├── tests/                  # Pytest suite
+├── .env                    # API Keys (git ignored)
+├── pyproject.toml          # Project dependencies
+└── chroma_db/              # Persistent vector storage
 ⚙️ Setup & Installation
-1. Clone the environment:
+1. Prerequisites
+Ensure you have uv installed (or use pip).
 
-Bash
-cd RAG-python
-2. Install dependencies with uv:
-
-Bash
-uv sync
-uv add langchain langchain-google-genai langchain-chroma langchain-community pypdf python-dotenv
-3. Configure Environment:
+2. Environment Setup
 Create a .env file in the root directory:
 
-Plaintext
+Code snippet
 GOOGLE_API_KEY=your_gemini_api_key_here
-4. Run the Pipeline:
+3. Install Dependencies
+PowerShell
+uv pip install -e .
+🎮 Usage
+To start the interactive AI chatbot using your local document as context:
 
-Bash
-uv run python main.py
-🛡 Security & Best Practices
-Credential Management: API keys are managed via .env variables and are excluded from version control via .gitignore.
+PowerShell
+python -m src.main
+The system will:
 
-Factual Integrity: The system is configured with temperature: 0 and strict prompt constraints to ensure output is strictly derivative of the input document.
+Load the PDF defined in main.py.
+
+Chunk and embed the text into a local database.
+
+Start a chat loop where you can ask questions and follow-ups.
+
+🧪 Testing
+The project uses pytest for quality assurance. To run the tests:
+
+PowerShell
+python -m pytest
+The test suite covers:
+
+Ingegstion: Verifies PDF parsing and chunking logic.
+
+Configuration: Ensures environment variables are correctly mapped.
+
+Engine: Validates the LangChain sequence construction using Mocks.
+
+🛡️ Best Practices Implemented
+Decoupling: The UI (main.py) is separated from the business logic (engine.py).
+
+Persistence: Data is stored on disk, not just in RAM.
+
+Scalability: The RAGEngine class can be imported directly into a FastAPI or Django project.
+
+Extensibility: Easily swap Gemini for OpenAI or Chroma for Pinecone by modifying the core modules.
+
+Developed by: Dominic Ian Bravo
