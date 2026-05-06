@@ -1,32 +1,63 @@
 import os
+from dotenv import load_dotenv
+# Corrected import path
+from langchain_core.messages import AIMessage, HumanMessage 
 from src.core.ingestion import load_and_split_pdf
 from src.core.vectorstore import get_vectorstore
 from src.core.engine import RAGEngine
 
-def run_rag_pipeline(file_path: str, query: str, custom_prompt: str = None):
-    # 1. Ingest document
-    print(f"--- Processing: {file_path} ---")
+load_dotenv()
+
+# Global Config for ease of use
+PATH = r"C:\Users\63966\Documents\project\RAG-python\Dominic Ian bravo.pdf"
+
+def run_single_query(file_path: str, query: str, custom_prompt: str = None):
+    """Runs a one-time RAG query without history."""
     chunks = load_and_split_pdf(file_path)
-    
-    # 2. Setup Vector Store (Persistent)
     vectorstore = get_vectorstore(chunks)
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
     
-    # 3. Setup RAG Engine
-    rag_engine = RAGEngine(custom_template=custom_prompt)
-    chain = rag_engine.get_chain(retriever)
+    engine = RAGEngine(custom_template=custom_prompt)
+    chain = engine.get_chain(retriever)
     
-    # 4. Execute Query
-    print(f"--- Querying AI ---")
-    return chain.invoke(query)
+    # Must pass as dict because engine now expects "question" and "chat_history"
+    return chain.invoke({"question": query, "chat_history": []})
+
+def start_interactive_chat(file_path: str):
+    """Starts a continuous chat session with memory."""
+    print(f"--- Loading Document: {os.path.basename(file_path)} ---")
+    chunks = load_and_split_pdf(file_path)
+    vectorstore = get_vectorstore(chunks)
+    retriever = vectorstore.as_retriever()
+    
+    engine = RAGEngine()
+    chain = engine.get_chain(retriever)
+    
+    chat_history = []
+    
+    print("\n[AI Chatbot Ready! Type 'exit' to quit]\n")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() in ['exit', 'quit']: 
+            break
+        
+        response = chain.invoke({
+            "question": user_input,
+            "chat_history": chat_history
+        })
+        
+        print(f"\nAI: {response}\n")
+        
+        chat_history.extend([
+            HumanMessage(content=user_input),
+            AIMessage(content=response)
+        ])
 
 if __name__ == "__main__":
-    # DYNAMIC INPUTS
-    PATH = r"C:\Users\63966\Documents\project\RAG-python\Dominic Ian bravo.pdf"
-    QUERY = "List the technical skills for Dominic Ian Bravo and where he lives."
-    
-    # Example: You can pass a totally different prompt structure here
-    PROMPT = "Context: {context} \n\n Task: Summarize skills and where he lives for {question}"
+    # Choose your mode:
+    # 1. For a single response:
+    # result = run_single_query(PATH, "What are his top 3 skills?")
+    # print(result)
 
-    response = run_rag_pipeline(PATH, QUERY, custom_prompt=PROMPT)
-    print(f"\nRESULT:\n{response}")
+    # 2. For the interactive experience (recommended for testing memory):
+    start_interactive_chat(PATH)
