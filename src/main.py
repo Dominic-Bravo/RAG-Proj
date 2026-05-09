@@ -52,7 +52,7 @@ def start_interactive_chat(file_path: str):
             HumanMessage(content=user_input),
             AIMessage(content=response)
         ])
-
+    
 if __name__ == "__main__":
     # Choose your mode:
     # 1. For a single response:
@@ -60,4 +60,19 @@ if __name__ == "__main__":
     # print(result)
 
     # 2. For the interactive experience (recommended for testing memory):
-    start_interactive_chat(PATH)
+    # start_interactive_chat(PATH)
+    
+    print("==== RAG AI SYSTEM ====")
+    print("1. PDF Chat")
+    print("2. Repo Coding Assistant")
+
+    choice = input("\nChoose option: ")
+    
+    if choice == "1":
+        start_interactive_chat(PATH)
+    elif choice == "2":
+        from src.repo_chat import start_repo_chat
+        repo_path = input("Enter repo path: ")
+        start_repo_chat(repo_path)
+    else:
+        print("Invalid choice. Exiting.")
