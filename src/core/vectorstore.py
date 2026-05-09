@@ -23,3 +23,21 @@ def get_vectorstore(chunks=None):
         )
         
     return vectorstore
+
+# update the rpo chats retrieval 
+
+# vectorstore = get_vectorstore(chunks, "pdf_db")
+# vectorstore = get_vectorstore(chunks, "repo_db")
+
+# def get_vectorstore(documents, collection_name: str):
+
+#     embeddings = get_embeddings()
+
+#     vectorstore = Chroma.from_documents(
+#         documents=documents,
+#         embedding=embeddings,
+#         persist_directory=f"chroma_db/{collection_name}",
+#         collection_name=collection_name
+#     )
+
+#     return vectorstore
