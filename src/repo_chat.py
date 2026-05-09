@@ -41,11 +41,11 @@ def start_repo_chat(repo_path: str):
 
         print("\nSources:")
 
-        for doc in response["source_documents"]:
+        # for doc in response["source_documents"]:
 
-            print(doc.metadata.get("source"))
+        #     print(doc.metadata.get("source"))
 
-        print()
+        # print()
 
         chat_history.extend([
             HumanMessage(content=user_input),
