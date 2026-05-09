@@ -1,6 +1,6 @@
 from langchain_core.messages import HumanMessage, AIMessage
 
-from src.core import split_repo
+from src.core.repo_ingestion import split_repo
 from src.core.vectorstore import get_vectorstore
 from src.core.engine import RAGEngine
 
@@ -35,7 +35,7 @@ def start_repo_chat(repo_path: str):
             "chat_history": chat_history
         })
 
-        answer = response["answer"]
+        answer = response
 
         print(f"\nAI: {answer}\n")
 

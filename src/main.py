@@ -1,5 +1,7 @@
 import os
 from dotenv import load_dotenv
+
+from .repo_chat import start_repo_chat
 # Corrected import path
 from langchain_core.messages import AIMessage, HumanMessage 
 from src.core.ingestion import load_and_split_pdf
@@ -71,7 +73,7 @@ if __name__ == "__main__":
     if choice == "1":
         start_interactive_chat(PATH)
     elif choice == "2":
-        from src.repo_chat import start_repo_chat
+        
         repo_path = input("Enter repo path: ")
         start_repo_chat(repo_path)
     else:
