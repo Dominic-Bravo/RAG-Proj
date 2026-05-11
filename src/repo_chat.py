@@ -3,16 +3,18 @@ from langchain_core.messages import HumanMessage, AIMessage
 from src.core.repo_ingestion import split_repo
 from src.core.vectorstore import get_vectorstore
 from src.core.engine import RAGEngine
+from src.core.sources import SourceType
+from src.config import settings
 
 
 def start_repo_chat(repo_path: str):
 
     chunks = split_repo(repo_path)
 
-    vectorstore = get_vectorstore(chunks)
+    vectorstore = get_vectorstore(chunks, source_type=SourceType.REPO)
 
     retriever = vectorstore.as_retriever(
-        search_kwargs={"k": 8}
+        search_kwargs={"k": settings.REPO_K}
     )
 
     engine = RAGEngine()

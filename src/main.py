@@ -1,23 +1,24 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 from .repo_chat import start_repo_chat
-# Corrected import path
 from langchain_core.messages import AIMessage, HumanMessage 
 from src.core.ingestion import load_and_split_pdf
 from src.core.vectorstore import get_vectorstore
 from src.core.engine import RAGEngine
+from src.core.sources import SourceType
+from src.config import settings
 
 load_dotenv()
 
-# Global Config for ease of use
-PATH = r"C:\Users\63966\Documents\project\RAG-python\Dominic Ian bravo.pdf"
+DEFAULT_PDF_PATH = Path(os.getenv("DEFAULT_PDF_PATH", "Dominic Ian bravo.pdf"))
 
 def run_single_query(file_path: str, query: str, custom_prompt: str = None):
     """Runs a one-time RAG query without history."""
     chunks = load_and_split_pdf(file_path)
-    vectorstore = get_vectorstore(chunks)
-    retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
+    vectorstore = get_vectorstore(chunks, source_type=SourceType.PDF)
+    retriever = vectorstore.as_retriever(search_kwargs={"k": settings.DEFAULT_K})
     
     engine = RAGEngine(custom_template=custom_prompt)
     chain = engine.get_chain(retriever)
@@ -29,8 +30,8 @@ def start_interactive_chat(file_path: str):
     """Starts a continuous chat session with memory."""
     print(f"--- Loading Document: {os.path.basename(file_path)} ---")
     chunks = load_and_split_pdf(file_path)
-    vectorstore = get_vectorstore(chunks)
-    retriever = vectorstore.as_retriever()
+    vectorstore = get_vectorstore(chunks, source_type=SourceType.PDF)
+    retriever = vectorstore.as_retriever(search_kwargs={"k": settings.DEFAULT_K})
     
     engine = RAGEngine()
     chain = engine.get_chain(retriever)
@@ -55,15 +56,7 @@ def start_interactive_chat(file_path: str):
             AIMessage(content=response)
         ])
     
-if __name__ == "__main__":
-    # Choose your mode:
-    # 1. For a single response:
-    # result = run_single_query(PATH, "What are his top 3 skills?")
-    # print(result)
-
-    # 2. For the interactive experience (recommended for testing memory):
-    # start_interactive_chat(PATH)
-    
+def main():
     print("==== RAG AI SYSTEM ====")
     print("1. PDF Chat")
     print("2. Repo Coding Assistant")
@@ -71,10 +64,15 @@ if __name__ == "__main__":
     choice = input("\nChoose option: ")
     
     if choice == "1":
-        start_interactive_chat(PATH)
+        pdf_path = input(f"Enter PDF path [{DEFAULT_PDF_PATH}]: ").strip()
+        start_interactive_chat(pdf_path or str(DEFAULT_PDF_PATH))
     elif choice == "2":
         
-        repo_path = input("Enter repo path: ")
+        repo_path = input("Enter repo path or GitHub URL: ")
         start_repo_chat(repo_path)
     else:
         print("Invalid choice. Exiting.")
+
+
+if __name__ == "__main__":
+    main()

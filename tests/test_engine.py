@@ -1,16 +1,13 @@
-from unittest.mock import MagicMock
 from src.core.engine import RAGEngine
-from langchain_core.runnables import RunnableSequence
+from langchain_core.runnables import RunnableLambda, RunnableSequence
 
 def test_engine_initialization():
-    engine = RAGEngine()
-    assert engine.llm.model == "gemini-2.5-flash"
+    fake_llm = RunnableLambda(lambda messages: "ok")
+    engine = RAGEngine(llm=fake_llm)
+    assert engine.llm is fake_llm
     
-    # Create a "fake" retriever instead of None
-    mock_retriever = MagicMock()
+    fake_retriever = RunnableLambda(lambda question: [])
     
-    # Now it won't crash!
-    chain = engine.get_chain(retriever=mock_retriever)
+    chain = engine.get_chain(retriever=fake_retriever)
     
-    # Verify it created a valid LangChain sequence
     assert isinstance(chain, RunnableSequence)
