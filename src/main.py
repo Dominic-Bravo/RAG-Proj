@@ -12,6 +12,7 @@ from src.config import settings
 
 """Main entry point for the RAG AI system. Provides a simple CLI to interact with either PDF documents or GitHub repositories.
 The user can choose to start a chat session with a PDF or a repo, and the system will load the relevant data, create a vector store, and use a RAG engine to answer questions based on the content. The system also supports a one-time query mode for quick questions without maintaining chat history.
+test
 """
 load_dotenv()
 
