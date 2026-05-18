@@ -2,6 +2,11 @@ from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+"""
+Configuration settings for the application.
+file suported by the application, and other parameters related to vector database management and LLM interactions.
+pdfs and github repositories. It also includes system prompts for the LLM to ensure accurate and concise responses based on the provided context.
+"""
 
 class Settings(BaseSettings):
     GOOGLE_API_KEY: str = ""
