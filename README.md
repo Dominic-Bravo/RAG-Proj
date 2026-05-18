@@ -1,5 +1,8 @@
 # RAG Python
 
+todo
+refactor codes and ui
+
 A small Retrieval-Augmented Generation app focused on two source types:
 
 - PDF documents
